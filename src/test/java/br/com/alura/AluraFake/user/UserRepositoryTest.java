@@ -1,5 +1,8 @@
 package br.com.alura.AluraFake.user;
 
+import br.com.alura.AluraFake.user.adapter.out.UserRepository;
+import br.com.alura.AluraFake.user.domain.Role;
+import br.com.alura.AluraFake.user.domain.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
