@@ -15,9 +15,9 @@ public class SingleChoiceValidator extends TaskOptionValidatorTemplate {
 
     @Override
     protected void validateCorrectAnswersRules(List<TaskOption> options) {
-        long correctCount = options.stream().filter(TaskOption::isCorrect).count();
+        long correctOptions = options.stream().filter(TaskOption::isCorrect).count();
         
-        if (correctCount != 1) {
+        if (correctOptions != 1) {
             throw new IllegalArgumentException("Single choice task must have exactly one correct answer");
         }
     }

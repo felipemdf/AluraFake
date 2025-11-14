@@ -29,9 +29,9 @@ public abstract class TaskOptionValidatorTemplate {
     }
 
     private void validateUniqueOptions(List<TaskOption> options) {
-        long uniqueCount = options.stream().map(o -> normalize(o.getOption())).distinct().count();
+        long uniqueOptions = options.stream().map(o -> normalize(o.getOption())).distinct().count();
         
-        if (uniqueCount != options.size()) {
+        if (uniqueOptions != options.size()) {
             throw new IllegalArgumentException("All options must be unique");
         }
     }

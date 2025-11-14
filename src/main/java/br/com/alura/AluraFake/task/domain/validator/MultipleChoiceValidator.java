@@ -15,14 +15,14 @@ public class MultipleChoiceValidator extends TaskOptionValidatorTemplate {
 
     @Override
     protected void validateCorrectAnswersRules(List<TaskOption> options) {
-        long correctCount = options.stream().filter(TaskOption::isCorrect).count();
-        long incorrectCount = options.size() - correctCount;
+        long correctOptions = options.stream().filter(TaskOption::isCorrect).count();
+        long incorrectOptions = options.size() - correctOptions;
         
-        if (correctCount < 2) {
+        if (correctOptions < 2) {
             throw new IllegalArgumentException("Multiple choice task must have at least two correct answers");
         }
         
-        if (incorrectCount < 1) {
+        if (incorrectOptions < 1) {
             throw new IllegalArgumentException("Multiple choice task must have at least one incorrect answer");
         }
     }
