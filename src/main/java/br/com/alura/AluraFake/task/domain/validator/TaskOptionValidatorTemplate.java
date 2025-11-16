@@ -1,6 +1,7 @@
 package br.com.alura.AluraFake.task.domain.validator;
 
 import br.com.alura.AluraFake.task.domain.TaskOption;
+import br.com.alura.AluraFake.task.domain.exception.InvalidTaskOptionsException;
 
 import java.text.Normalizer;
 import java.util.List;
@@ -23,7 +24,7 @@ public abstract class TaskOptionValidatorTemplate {
             Integer optionLength = option.getOption().length();
 
             if (optionLength < minLength || optionLength > maxLength) {
-                throw new IllegalArgumentException("Each option must be between 4 and 80 characters");
+                throw InvalidTaskOptionsException.invalidLength();
             }
         }
     }
@@ -32,7 +33,7 @@ public abstract class TaskOptionValidatorTemplate {
         long uniqueOptions = options.stream().map(o -> normalize(o.getOption())).distinct().count();
         
         if (uniqueOptions != options.size()) {
-            throw new IllegalArgumentException("All options must be unique");
+            throw InvalidTaskOptionsException.nonUniqueOptions();
         }
     }
 
@@ -41,7 +42,7 @@ public abstract class TaskOptionValidatorTemplate {
         
         for (TaskOption option : options) {
             if (normalize(option.getOption()).equals(normalizedStatement)) {
-                throw new IllegalArgumentException("Options cannot be equal to the statement");
+                throw InvalidTaskOptionsException.optionEqualsStatement();
             }
         }
     }

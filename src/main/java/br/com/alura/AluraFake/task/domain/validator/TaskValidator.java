@@ -3,6 +3,9 @@ package br.com.alura.AluraFake.task.domain.validator;
 import br.com.alura.AluraFake.task.domain.Task;
 import br.com.alura.AluraFake.task.domain.TaskOption;
 import br.com.alura.AluraFake.task.domain.Type;
+import br.com.alura.AluraFake.task.domain.exception.InvalidTaskOrderException;
+import br.com.alura.AluraFake.task.domain.exception.InvalidTaskStatementException;
+import br.com.alura.AluraFake.task.domain.exception.OpenTextValidationException;
 
 import java.util.List;
 
@@ -36,7 +39,7 @@ public class TaskValidator {
         return switch (type) {
             case SINGLE_CHOICE -> SINGLE_CHOICE_VALIDATOR;
             case MULTIPLE_CHOICE -> MULTIPLE_CHOICE_VALIDATOR;
-            case OPEN_TEXT -> throw new IllegalArgumentException("Open text tasks do not require option; validation");
+            case OPEN_TEXT -> throw new OpenTextValidationException();
         };
     }
 
@@ -44,7 +47,7 @@ public class TaskValidator {
     private static void validateStatement(String statement) {
 
         if (statement.length() < 4 || statement.length() > 255) {
-            throw new IllegalArgumentException("Statement must be between 4 and 255 characters");
+            throw new InvalidTaskStatementException();
         }
     }
 
@@ -52,7 +55,7 @@ public class TaskValidator {
 
         
         if (order < 0) {
-            throw new IllegalArgumentException("Order must be a positive integer");
+            throw new InvalidTaskOrderException();
         }
     }
 }

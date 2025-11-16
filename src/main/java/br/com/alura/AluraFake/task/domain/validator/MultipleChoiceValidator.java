@@ -1,6 +1,8 @@
 package br.com.alura.AluraFake.task.domain.validator;
 
 import br.com.alura.AluraFake.task.domain.TaskOption;
+import br.com.alura.AluraFake.task.domain.exception.InvalidCorrectAnswersException;
+import br.com.alura.AluraFake.task.domain.exception.InvalidOptionsCountException;
 
 import java.util.List;
 
@@ -9,7 +11,7 @@ public class MultipleChoiceValidator extends TaskOptionValidatorTemplate {
     @Override
     protected void validateOptionsCount(List<TaskOption> options) {
         if (options.size() < 3 || options.size() > 5) {
-            throw new IllegalArgumentException("Multiple choice task must have between 3 and 5 options");
+            throw InvalidOptionsCountException.multipleChoice();
         }
     }
 
@@ -19,11 +21,11 @@ public class MultipleChoiceValidator extends TaskOptionValidatorTemplate {
         long incorrectOptions = options.size() - correctOptions;
         
         if (correctOptions < 2) {
-            throw new IllegalArgumentException("Multiple choice task must have at least two correct answers");
+            throw InvalidCorrectAnswersException.multipleChoiceMinimumTwo();
         }
         
         if (incorrectOptions < 1) {
-            throw new IllegalArgumentException("Multiple choice task must have at least one incorrect answer");
+            throw InvalidCorrectAnswersException.multipleChoiceMinimumOneIncorrect();
         }
     }
 }
