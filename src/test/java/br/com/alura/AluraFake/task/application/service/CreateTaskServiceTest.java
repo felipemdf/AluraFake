@@ -76,9 +76,8 @@ class CreateTaskServiceTest {
         @Test
         @DisplayName("Should create single choice task successfully")
         void shouldCreateSingleChoiceTaskSuccessfully() {
-            // Given
             String statement = "What is the capital of Brazil?";
-            Integer order = 2;
+            Integer order = 1;
             List<NewTaskOptionDTO> options = List.of(
                 new NewTaskOptionDTO("Brasília", true),
                 new NewTaskOptionDTO("São Paulo", false),
@@ -94,7 +93,7 @@ class CreateTaskServiceTest {
 
             assertThat(course.getTasks()).hasSize(1);
             assertThat(task.getStatement()).isEqualTo("What is the capital of Brazil?");
-            assertThat(task.getOrder()).isEqualTo(2);
+            assertThat(task.getOrder()).isEqualTo(1);
             assertThat(task.getType()).isEqualTo(Type.SINGLE_CHOICE);
             assertThat(task.getOptions().size()).isEqualTo(3);
 
@@ -117,7 +116,7 @@ class CreateTaskServiceTest {
         @DisplayName("Should create multiple choice task successfully")
         void shouldCreateMultipleChoiceTaskSuccessfully() {
             String statement = "Which are programming languages?";
-            Integer order = 3;
+            Integer order = 1;
             List<NewTaskOptionDTO> options = List.of(
                 new NewTaskOptionDTO("Java", true),
                 new NewTaskOptionDTO("Python", true),
@@ -134,7 +133,7 @@ class CreateTaskServiceTest {
 
             assertThat(course.getTasks()).hasSize(1);
             assertThat(task.getStatement()).isEqualTo("Which are programming languages?");
-            assertThat(task.getOrder()).isEqualTo(3);
+            assertThat(task.getOrder()).isEqualTo(1);
             assertThat(task.getType()).isEqualTo(Type.MULTIPLE_CHOICE);
             assertThat(task.getOptions().size()).isEqualTo(4);
 

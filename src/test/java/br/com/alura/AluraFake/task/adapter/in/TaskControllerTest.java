@@ -52,7 +52,7 @@ class TaskControllerTest {
             mockMvc.perform(post("/task/new/opentext")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(dto)))
-                    .andExpect(status().isOk());
+                    .andExpect(status().isCreated());
 
             verify(createTaskUseCase).createOpenTextTask(1L, "What is your favorite programming language?", 1);
         }
@@ -152,7 +152,7 @@ class TaskControllerTest {
             mockMvc.perform(post("/task/new/singlechoice")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(dto)))
-                    .andExpect(status().isOk());
+                    .andExpect(status().isCreated());
 
             verify(createTaskUseCase).createSingleChoiceTask(eq(1L), eq("What is the capital of Brazil?"), eq(2), anyList());
         }
@@ -201,7 +201,7 @@ class TaskControllerTest {
             mockMvc.perform(post("/task/new/multiplechoice")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(dto)))
-                    .andExpect(status().isOk());
+                    .andExpect(status().isCreated());
 
             verify(createTaskUseCase).createMultipleChoiceTask(eq(1L), eq("Which are programming languages?"), eq(3), anyList());
         }

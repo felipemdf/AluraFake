@@ -3,6 +3,7 @@ package br.com.alura.AluraFake.task.adapter.in;
 import br.com.alura.AluraFake.task.adapter.in.dto.NewTaskDTO;
 import br.com.alura.AluraFake.task.application.port.in.CreateTaskUseCase;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,7 @@ public class TaskController {
 
         createTaskUseCase.createOpenTextTask(dto.getCourseId(), dto.getStatement(), dto.getOrder());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/task/new/singlechoice")
@@ -32,7 +33,7 @@ public class TaskController {
 
         createTaskUseCase.createSingleChoiceTask(dto.getCourseId(), dto.getStatement(), dto.getOrder(), dto.getOptions());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/task/new/multiplechoice")
@@ -40,7 +41,7 @@ public class TaskController {
 
         createTaskUseCase.createMultipleChoiceTask(dto.getCourseId(), dto.getStatement(), dto.getOrder(), dto.getOptions());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 }

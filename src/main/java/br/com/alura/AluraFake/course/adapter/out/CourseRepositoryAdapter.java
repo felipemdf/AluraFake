@@ -1,5 +1,6 @@
 package br.com.alura.AluraFake.course.adapter.out;
 
+import br.com.alura.AluraFake.course.application.port.out.FindAllCoursesByInstructorIdPort;
 import br.com.alura.AluraFake.course.application.port.out.FindAllCoursesPort;
 import br.com.alura.AluraFake.course.application.port.out.FindCourseByIdPort;
 import br.com.alura.AluraFake.course.application.port.out.SaveCoursePort;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class CourseRepositoryAdapter implements FindCourseByIdPort, FindAllCoursesPort, SaveCoursePort {
+public class CourseRepositoryAdapter implements FindCourseByIdPort, FindAllCoursesPort, SaveCoursePort, FindAllCoursesByInstructorIdPort {
 
     private final CourseRepository courseRepository;
 
@@ -35,5 +36,10 @@ public class CourseRepositoryAdapter implements FindCourseByIdPort, FindAllCours
     public Course save(Course course) {
 
         return courseRepository.save(course);
+    }
+
+    @Override
+    public List<Course> findCourseByInstructorId(Long instructorId) {
+        return courseRepository.findByInstructorId(instructorId);
     }
 }
