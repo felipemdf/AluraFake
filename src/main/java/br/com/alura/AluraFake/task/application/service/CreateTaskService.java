@@ -6,6 +6,7 @@ import br.com.alura.AluraFake.course.domain.Course;
 import br.com.alura.AluraFake.task.adapter.in.dto.NewTaskOptionDTO;
 import br.com.alura.AluraFake.task.application.port.in.CreateTaskUseCase;
 import br.com.alura.AluraFake.task.domain.Task;
+import br.com.alura.AluraFake.task.domain.exception.TaskNotFoundException;
 import br.com.alura.AluraFake.task.domain.factory.TaskFactory;
 import br.com.alura.AluraFake.task.domain.TaskOption;
 import org.springframework.stereotype.Service;
@@ -27,39 +28,53 @@ public class CreateTaskService implements CreateTaskUseCase {
 
 
     @Override
-    public void createOpenTextTask(Long courseId, String statement, Integer order) {
+    public Task createOpenTextTask(Long courseId, String statement, Integer order) {
         Course course = findCourseByIdPort.findById(courseId);
 
         Task task = TaskFactory.createOpenTextTask(statement, order);
         course.addTask(task);
 
-        saveCoursePort.save(course);
+        Course savedCourse = saveCoursePort.save(course);
+
+        return getSavedTask(statement, savedCourse);
     }
 
+
     @Override
-    public void createSingleChoiceTask(Long courseId, String statement, Integer order, List<NewTaskOptionDTO> optionsDTO) {
+    public Task createSingleChoiceTask(Long courseId, String statement, Integer order, List<NewTaskOptionDTO> optionsDTO) {
         Course course = findCourseByIdPort.findById(courseId);
 
         Task task = TaskFactory.createSingleChoiceTask(statement, order, createTaskOptions(optionsDTO));
         course.addTask(task);
 
-        saveCoursePort.save(course);
+        Course savedCourse = saveCoursePort.save(course);
+
+        return getSavedTask(statement, savedCourse);
     }
 
 
     @Override
-    public void createMultipleChoiceTask(Long courseId, String statement, Integer order, List<NewTaskOptionDTO> optionsDTO) {
+    public Task createMultipleChoiceTask(Long courseId, String statement, Integer order, List<NewTaskOptionDTO> optionsDTO) {
         Course course = findCourseByIdPort.findById(courseId);
 
         Task task = TaskFactory.createMultipleChoiceTask(statement, order, createTaskOptions(optionsDTO));
         course.addTask(task);
 
-        saveCoursePort.save(course);
+        Course savedCourse = saveCoursePort.save(course);
+
+        return getSavedTask(statement, savedCourse);
     }
 
     private List<TaskOption> createTaskOptions(List<NewTaskOptionDTO> optionsDTO) {
         return optionsDTO.stream()
                 .map(dto -> new TaskOption(dto.getOption(), dto.isCorrect()))
                 .toList();
+    }
+
+    private Task getSavedTask(String statement, Course savedCourse) {
+        return savedCourse.getTasks().stream()
+                .filter(t -> t.getStatement().equals(statement))
+                .findFirst()
+                .orElseThrow(() -> new TaskNotFoundException(statement));
     }
 }

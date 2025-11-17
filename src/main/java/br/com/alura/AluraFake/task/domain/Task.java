@@ -56,6 +56,11 @@ public class Task {
         return options;
     }
 
+    public Type getType() {
+
+        return type;
+    }
+
     public void addOptions(List<TaskOption> options) {
         TaskValidator.validateOptions(this.statement, this.type, options);
         this.options.addAll(options);

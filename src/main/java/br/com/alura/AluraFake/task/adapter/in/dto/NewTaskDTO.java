@@ -11,7 +11,7 @@ import java.util.List;
 
 public class NewTaskDTO {
 
-    @NotNull
+    @NotNull(message = "Course id cannot be null")
     private final Long courseId;
 
     @NotBlank

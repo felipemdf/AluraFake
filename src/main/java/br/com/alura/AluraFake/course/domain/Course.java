@@ -75,6 +75,10 @@ public class Course {
 
     public LocalDateTime getPublishedAt() { return publishedAt; }
 
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
     public void addTask(Task task) {
 
         //TODO Adicionar validações
