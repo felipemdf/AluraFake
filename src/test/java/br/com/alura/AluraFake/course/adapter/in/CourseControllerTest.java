@@ -2,6 +2,7 @@ package br.com.alura.AluraFake.course.adapter.in;
 
 import br.com.alura.AluraFake.course.adapter.in.dto.NewCourseDTO;
 import br.com.alura.AluraFake.course.application.port.in.FindInstructorCoursesReportUseCase;
+import br.com.alura.AluraFake.course.application.port.in.PublishCourseUseCase;
 import br.com.alura.AluraFake.course.application.port.out.FindAllCoursesPort;
 import br.com.alura.AluraFake.course.application.port.out.SaveCoursePort;
 import br.com.alura.AluraFake.course.domain.Course;
@@ -33,6 +34,9 @@ class CourseControllerTest {
 
     @MockBean
     private SaveCoursePort saveCoursePort;
+
+    @MockBean
+    private PublishCourseUseCase publishCourseUseCase;
 
     @MockBean
     private FindAllCoursesPort findAllCoursesPort;
