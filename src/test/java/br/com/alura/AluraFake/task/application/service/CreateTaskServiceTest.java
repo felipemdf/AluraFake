@@ -55,75 +55,18 @@ class CreateTaskServiceTest {
             Integer order = 1;
             
             when(findCourseByIdPort.findById(courseId)).thenReturn(course);
-            assertThat(course.getTasks()).hasSize(1);
+            when(saveCoursePort.save(course)).thenReturn(course);
 
             Task task = createTaskService.createOpenTextTask(courseId, statement, order);
 
             verify(findCourseByIdPort).findById(courseId);
 
             assertThat(course.getTasks()).hasSize(1);
-            assertThat(task.getStatement()).isEqualTo("Hello World!");
+            assertThat(task.getStatement()).isEqualTo("What is your favorite programming language?");
             assertThat(task.getOrder()).isEqualTo(1);
             assertThat(task.getType()).isEqualTo(Type.OPEN_TEXT);
         }
 
-//        @Test
-//        @DisplayName("Should fail when course not found")
-//        void shouldFailWhenCourseNotFound() {
-//            // Given
-//            String statement = "What is your favorite programming language?";
-//            Integer order = 1;
-//
-//            when(findCourseByIdPort.findById(courseId))
-//                    .thenThrow(new ResourceNotFoundException("Course", courseId));
-//
-//            // When & Then
-//            assertThatThrownBy(() ->
-//                createTaskService.createOpenTextTask(courseId, statement, order))
-//                    .isInstanceOf(ResourceNotFoundException.class)
-//                    .hasMessage("Course with id 1 was not found");
-//
-//            verify(findCourseByIdPort).findById(courseId);
-//            verify(saveCoursePort, never()).save(any());
-//        }
-//
-//        @Test
-//        @DisplayName("Should fail when statement is invalid")
-//        void shouldFailWhenStatementIsInvalid() {
-//            // Given
-//            String invalidStatement = "Hi"; // Too short
-//            Integer order = 1;
-//
-//            when(findCourseByIdPort.findById(courseId)).thenReturn(course);
-//
-//            // When & Then
-//            assertThatThrownBy(() ->
-//                createTaskService.createOpenTextTask(courseId, invalidStatement, order))
-//                    .isInstanceOf(InvalidTaskStatementException.class)
-//                    .hasMessage("Statement must be between 4 and 255 characters");
-//
-//            verify(findCourseByIdPort).findById(courseId);
-//            verify(saveCoursePort, never()).save(any());
-//        }
-//
-//        @Test
-//        @DisplayName("Should fail when order is invalid")
-//        void shouldFailWhenOrderIsInvalid() {
-//            // Given
-//            String statement = "What is your favorite programming language?";
-//            Integer invalidOrder = -1;
-//
-//            when(findCourseByIdPort.findById(courseId)).thenReturn(course);
-//
-//            // When & Then
-//            assertThatThrownBy(() ->
-//                createTaskService.createOpenTextTask(courseId, statement, invalidOrder))
-//                    .isInstanceOf(InvalidTaskOrderException.class)
-//                    .hasMessage("Order must be a positive integer");
-//
-//            verify(findCourseByIdPort).findById(courseId);
-//            verify(saveCoursePort, never()).save(any());
-//        }
     }
 
     @Nested
@@ -141,8 +84,6 @@ class CreateTaskServiceTest {
                 new NewTaskOptionDTO("São Paulo", false),
                 new NewTaskOptionDTO("Rio de Janeiro", false)
             );
-
-            when(findCourseByIdPort.findById(courseId)).thenReturn(course);
 
             when(findCourseByIdPort.findById(courseId)).thenReturn(course);
             when(saveCoursePort.save(course)).thenReturn(course);
@@ -166,51 +107,6 @@ class CreateTaskServiceTest {
             assertThat(task.getOptions().get(2).isCorrect()).isEqualTo(false);
 
         }
-
-//        @Test
-//        @DisplayName("Should fail with invalid single choice options")
-//        void shouldFailWithInvalidSingleChoiceOptions() {
-//            // Given
-//            String statement = "What is the capital of Brazil?";
-//            Integer order = 2;
-//            List<NewTaskOptionDTO> invalidOptions = List.of(
-//                new NewTaskOptionDTO("Brasília", true),
-//                new NewTaskOptionDTO("São Paulo", true) // Two correct answers
-//            );
-//
-//            when(findCourseByIdPort.findById(courseId)).thenReturn(course);
-//
-//            // When & Then
-//            assertThatThrownBy(() ->
-//                createTaskService.createSingleChoiceTask(courseId, statement, order, invalidOptions))
-//                    .isInstanceOf(InvalidCorrectAnswersException.class)
-//                    .hasMessage("Single choice task must have exactly one correct answer");
-//
-//            verify(findCourseByIdPort).findById(courseId);
-//            verify(saveCoursePort, never()).save(any());
-//        }
-//
-//        @Test
-//        @DisplayName("Should fail with insufficient options")
-//        void shouldFailWithInsufficientOptions() {
-//            // Given
-//            String statement = "What is the capital of Brazil?";
-//            Integer order = 2;
-//            List<NewTaskOptionDTO> insufficientOptions = List.of(
-//                new NewTaskOptionDTO("Brasília", true) // Only one option
-//            );
-//
-//            when(findCourseByIdPort.findById(courseId)).thenReturn(course);
-//
-//            // When & Then
-//            assertThatThrownBy(() ->
-//                createTaskService.createSingleChoiceTask(courseId, statement, order, insufficientOptions))
-//                    .isInstanceOf(InvalidOptionsCountException.class)
-//                    .hasMessage("Single choice task must have between 2 and 5 options");
-//
-//            verify(findCourseByIdPort).findById(courseId);
-//            verify(saveCoursePort, never()).save(any());
-//        }
     }
 
     @Nested
@@ -220,17 +116,17 @@ class CreateTaskServiceTest {
         @Test
         @DisplayName("Should create multiple choice task successfully")
         void shouldCreateMultipleChoiceTaskSuccessfully() {
-            // Given
             String statement = "Which are programming languages?";
             Integer order = 3;
             List<NewTaskOptionDTO> options = List.of(
                 new NewTaskOptionDTO("Java", true),
                 new NewTaskOptionDTO("Python", true),
                 new NewTaskOptionDTO("HTML", false),
-                new NewTaskOptionDTO("CSS", false)
+                new NewTaskOptionDTO("CSS3", false)
             );
             
             when(findCourseByIdPort.findById(courseId)).thenReturn(course);
+            when(saveCoursePort.save(course)).thenReturn(course);
 
             Task task = createTaskService.createMultipleChoiceTask(courseId, statement, order, options);
 
@@ -245,59 +141,12 @@ class CreateTaskServiceTest {
             assertThat(task.getOptions().get(0).getOption()).isEqualTo("Java");
             assertThat(task.getOptions().get(1).getOption()).isEqualTo("Python");
             assertThat(task.getOptions().get(2).getOption()).isEqualTo("HTML");
-            assertThat(task.getOptions().get(3).getOption()).isEqualTo("CSS");
+            assertThat(task.getOptions().get(3).getOption()).isEqualTo("CSS3");
 
             assertThat(task.getOptions().get(0).isCorrect()).isEqualTo(true);
             assertThat(task.getOptions().get(1).isCorrect()).isEqualTo(true);
             assertThat(task.getOptions().get(2).isCorrect()).isEqualTo(false);
             assertThat(task.getOptions().get(3).isCorrect()).isEqualTo(false);
         }
-
-//        @Test
-//        @DisplayName("Should fail with invalid multiple choice options")
-//        void shouldFailWithInvalidMultipleChoiceOptions() {
-//            // Given
-//            String statement = "Which are programming languages?";
-//            Integer order = 3;
-//            List<NewTaskOptionDTO> invalidOptions = List.of(
-//                new NewTaskOptionDTO("Java", true),
-//                new NewTaskOptionDTO("HTML", false),
-//                new NewTaskOptionDTO("CSS", false) // Only one correct answer
-//            );
-//
-//            when(findCourseByIdPort.findById(courseId)).thenReturn(course);
-//
-//            // When & Then
-//            assertThatThrownBy(() ->
-//                createTaskService.createMultipleChoiceTask(courseId, statement, order, invalidOptions))
-//                    .isInstanceOf(InvalidCorrectAnswersException.class)
-//                    .hasMessage("Multiple choice task must have at least two correct answers");
-//
-//            verify(findCourseByIdPort).findById(courseId);
-//            verify(saveCoursePort, never()).save(any());
-//        }
-//
-//        @Test
-//        @DisplayName("Should fail with insufficient options for multiple choice")
-//        void shouldFailWithInsufficientOptionsForMultipleChoice() {
-//            // Given
-//            String statement = "Which are programming languages?";
-//            Integer order = 3;
-//            List<NewTaskOptionDTO> insufficientOptions = List.of(
-//                new NewTaskOptionDTO("Java", true),
-//                new NewTaskOptionDTO("Python", true) // Only two options
-//            );
-//
-//            when(findCourseByIdPort.findById(courseId)).thenReturn(course);
-//
-//            // When & Then
-//            assertThatThrownBy(() ->
-//                createTaskService.createMultipleChoiceTask(courseId, statement, order, insufficientOptions))
-//                    .isInstanceOf(InvalidOptionsCountException.class)
-//                    .hasMessage("Multiple choice task must have between 3 and 5 options");
-//
-//            verify(findCourseByIdPort).findById(courseId);
-//            verify(saveCoursePort, never()).save(any());
-//        }
     }
 }
