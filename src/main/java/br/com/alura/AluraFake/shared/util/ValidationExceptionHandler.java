@@ -1,6 +1,7 @@
 package br.com.alura.AluraFake.shared.util;
 
 import br.com.alura.AluraFake.shared.domain.exception.DomainException;
+import br.com.alura.AluraFake.shared.domain.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,6 +19,12 @@ public class ValidationExceptionHandler {
     public ResponseEntity<List<ErrorItemDTO>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         List<ErrorItemDTO> errors = ex.getBindingResult().getFieldErrors().stream().map(ErrorItemDTO::new).toList();
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorItemDTO> handleResourceNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorItemDTO("resource", ex.getMessage()));
     }
 
     @ExceptionHandler(DomainException.class)

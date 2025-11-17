@@ -1,5 +1,6 @@
 package br.com.alura.AluraFake.course.domain;
 
+import br.com.alura.AluraFake.course.domain.validator.CourseValidator;
 import br.com.alura.AluraFake.task.domain.Task;
 import br.com.alura.AluraFake.user.domain.User;
 import jakarta.persistence.*;
@@ -81,8 +82,21 @@ public class Course {
 
     public void addTask(Task task) {
 
-        //TODO Adicionar validações
+        CourseValidator.validateTask(this, task.getStatement(), task.getOrder());
+
+        Boolean orderExists = tasks.stream().anyMatch(t -> t.getOrder().equals(task.getOrder()));
+
+        if(orderExists) {
+            tasks.stream().filter(t -> t.getOrder().equals(task.getOrder())).forEach(t -> t.increaseOrder());
+        }
 
         tasks.add(task);
+    }
+
+    public void publish() {
+        CourseValidator.validatePublish(this);
+
+        this.status = Status.PUBLISHED;
+        this.publishedAt = LocalDateTime.now();
     }
 }

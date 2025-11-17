@@ -66,4 +66,8 @@ public class Task {
         this.options.addAll(options);
     }
 
+    public void increaseOrder() {
+        this.order += 1;
+    }
+
 }

@@ -1,6 +1,5 @@
-package br.com.alura.AluraFake.user;
+package br.com.alura.AluraFake.user.adapter.in;
 
-import br.com.alura.AluraFake.user.adapter.in.UserController;
 import br.com.alura.AluraFake.user.adapter.in.dto.NewUserDTO;
 import br.com.alura.AluraFake.user.adapter.out.UserRepository;
 import br.com.alura.AluraFake.user.domain.Role;
