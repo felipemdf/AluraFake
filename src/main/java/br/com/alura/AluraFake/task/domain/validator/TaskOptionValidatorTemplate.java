@@ -1,0 +1,57 @@
+package br.com.alura.AluraFake.task.domain.validator;
+
+import br.com.alura.AluraFake.task.domain.TaskOption;
+import br.com.alura.AluraFake.task.domain.exception.InvalidTaskOptionsException;
+
+import java.text.Normalizer;
+import java.util.List;
+
+public abstract class TaskOptionValidatorTemplate {
+
+    public final void validate(String statement, List<TaskOption> options) {
+        validateOptionsCount(options);
+        validateOptionsLength(options);
+        validateUniqueOptions(options);
+        validateOptionsNotEqualToStatement(statement, options);
+        validateCorrectAnswersRules(options);
+    }
+
+    private void validateOptionsLength(List<TaskOption> options) {
+        Integer minLength = 4;
+        Integer maxLength = 80;
+
+        for (TaskOption option : options) {
+            Integer optionLength = option.getOption().length();
+
+            if (optionLength < minLength || optionLength > maxLength) {
+                throw InvalidTaskOptionsException.invalidLength();
+            }
+        }
+    }
+
+    private void validateUniqueOptions(List<TaskOption> options) {
+        long uniqueOptions = options.stream().map(o -> normalize(o.getOption())).distinct().count();
+        
+        if (uniqueOptions != options.size()) {
+            throw InvalidTaskOptionsException.nonUniqueOptions();
+        }
+    }
+
+    private void validateOptionsNotEqualToStatement(String statement, List<TaskOption> options) {
+        String normalizedStatement = normalize(statement);
+        
+        for (TaskOption option : options) {
+            if (normalize(option.getOption()).equals(normalizedStatement)) {
+                throw InvalidTaskOptionsException.optionEqualsStatement();
+            }
+        }
+    }
+
+    protected abstract void validateOptionsCount(List<TaskOption> options);
+    
+    protected abstract void validateCorrectAnswersRules(List<TaskOption> options);
+
+    protected final String normalize(String text) {
+        return Normalizer.normalize(text, Normalizer.Form.NFD).replaceAll("\\p{M}", "").toLowerCase().trim();
+    }
+}

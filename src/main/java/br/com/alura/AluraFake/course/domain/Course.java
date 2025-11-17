@@ -1,0 +1,88 @@
+package br.com.alura.AluraFake.course.domain;
+
+import br.com.alura.AluraFake.task.domain.Task;
+import br.com.alura.AluraFake.user.domain.User;
+import jakarta.persistence.*;
+import org.springframework.util.Assert;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+public class Course {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String title;
+
+    private String description;
+
+    @ManyToOne
+    private User instructor;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    private LocalDateTime publishedAt;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id")
+    private List<Task> tasks = new ArrayList<>();
+
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Deprecated
+    public Course(){}
+
+    public Course(String title, String description, User instructor) {
+        Assert.isTrue(instructor.isInstructor(), "Usuario deve ser um instrutor");
+        this.title = title;
+        this.instructor = instructor;
+        this.description = description;
+        this.status = Status.BUILDING;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public User getInstructor() {
+        return instructor;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public LocalDateTime getPublishedAt() { return publishedAt; }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void addTask(Task task) {
+
+        //TODO Adicionar validações
+
+        tasks.add(task);
+    }
+}
