@@ -1,6 +1,7 @@
 package br.com.alura.AluraFake.task.adapter.in;
 
 import br.com.alura.AluraFake.task.adapter.in.dto.NewTaskDTO;
+import br.com.alura.AluraFake.task.adapter.in.dto.NewTaskWithOptionsDTO;
 import br.com.alura.AluraFake.task.application.port.in.CreateTaskUseCase;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class TaskController {
     }
 
     @PostMapping("/task/new/singlechoice")
-    public ResponseEntity newSingleChoice(@Valid @RequestBody NewTaskDTO dto) {
+    public ResponseEntity newSingleChoice(@Valid @RequestBody NewTaskWithOptionsDTO dto) {
 
         createTaskUseCase.createSingleChoiceTask(dto.getCourseId(), dto.getStatement(), dto.getOrder(), dto.getOptions());
 
@@ -37,7 +38,7 @@ public class TaskController {
     }
 
     @PostMapping("/task/new/multiplechoice")
-    public ResponseEntity newMultipleChoice(@Valid @RequestBody NewTaskDTO dto) {
+    public ResponseEntity newMultipleChoice(@Valid @RequestBody NewTaskWithOptionsDTO dto) {
 
         createTaskUseCase.createMultipleChoiceTask(dto.getCourseId(), dto.getStatement(), dto.getOrder(), dto.getOptions());
 

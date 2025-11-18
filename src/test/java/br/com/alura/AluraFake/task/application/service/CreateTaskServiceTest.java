@@ -40,8 +40,8 @@ class CreateTaskServiceTest {
 
     @BeforeEach
     void setUp() {
-        User instructor = new User("John Doe", "john@alura.com", Role.INSTRUCTOR);
-        course = new Course("Java Programming", "java-programming", instructor);
+        User instructor = new User("João Silva", "joao@alura.com", Role.INSTRUCTOR);
+        course = new Course("Programação Java", "programacao-java", instructor);
     }
 
     @Nested
@@ -51,9 +51,9 @@ class CreateTaskServiceTest {
         @Test
         @DisplayName("Should create open text task successfully")
         void shouldCreateOpenTextTaskSuccessfully() {
-            String statement = "What is your favorite programming language?";
+            String statement = "Qual é sua linguagem de programação favorita?";
             Integer order = 1;
-            
+
             when(findCourseByIdPort.findById(courseId)).thenReturn(course);
             when(saveCoursePort.save(course)).thenReturn(course);
 
@@ -62,7 +62,7 @@ class CreateTaskServiceTest {
             verify(findCourseByIdPort).findById(courseId);
 
             assertThat(course.getTasks()).hasSize(1);
-            assertThat(task.getStatement()).isEqualTo("What is your favorite programming language?");
+            assertThat(task.getStatement()).isEqualTo("Qual é sua linguagem de programação favorita?");
             assertThat(task.getOrder()).isEqualTo(1);
             assertThat(task.getType()).isEqualTo(Type.OPEN_TEXT);
         }
@@ -76,12 +76,12 @@ class CreateTaskServiceTest {
         @Test
         @DisplayName("Should create single choice task successfully")
         void shouldCreateSingleChoiceTaskSuccessfully() {
-            String statement = "What is the capital of Brazil?";
+            String statement = "Qual é a capital do Brasil?";
             Integer order = 1;
             List<NewTaskOptionDTO> options = List.of(
-                new NewTaskOptionDTO("Brasília", true),
-                new NewTaskOptionDTO("São Paulo", false),
-                new NewTaskOptionDTO("Rio de Janeiro", false)
+                    new NewTaskOptionDTO("Brasília", true),
+                    new NewTaskOptionDTO("São Paulo", false),
+                    new NewTaskOptionDTO("Rio de Janeiro", false)
             );
 
             when(findCourseByIdPort.findById(courseId)).thenReturn(course);
@@ -92,7 +92,7 @@ class CreateTaskServiceTest {
             verify(findCourseByIdPort).findById(courseId);
 
             assertThat(course.getTasks()).hasSize(1);
-            assertThat(task.getStatement()).isEqualTo("What is the capital of Brazil?");
+            assertThat(task.getStatement()).isEqualTo("Qual é a capital do Brasil?");
             assertThat(task.getOrder()).isEqualTo(1);
             assertThat(task.getType()).isEqualTo(Type.SINGLE_CHOICE);
             assertThat(task.getOptions().size()).isEqualTo(3);
@@ -115,15 +115,15 @@ class CreateTaskServiceTest {
         @Test
         @DisplayName("Should create multiple choice task successfully")
         void shouldCreateMultipleChoiceTaskSuccessfully() {
-            String statement = "Which are programming languages?";
+            String statement = "Quais são linguagens de programação?";
             Integer order = 1;
             List<NewTaskOptionDTO> options = List.of(
-                new NewTaskOptionDTO("Java", true),
-                new NewTaskOptionDTO("Python", true),
-                new NewTaskOptionDTO("HTML", false),
-                new NewTaskOptionDTO("CSS3", false)
+                    new NewTaskOptionDTO("Java", true),
+                    new NewTaskOptionDTO("Python", true),
+                    new NewTaskOptionDTO("Marcação HTML", false),
+                    new NewTaskOptionDTO("Estilo CSS", false)
             );
-            
+
             when(findCourseByIdPort.findById(courseId)).thenReturn(course);
             when(saveCoursePort.save(course)).thenReturn(course);
 
@@ -132,15 +132,15 @@ class CreateTaskServiceTest {
             verify(findCourseByIdPort).findById(courseId);
 
             assertThat(course.getTasks()).hasSize(1);
-            assertThat(task.getStatement()).isEqualTo("Which are programming languages?");
+            assertThat(task.getStatement()).isEqualTo("Quais são linguagens de programação?");
             assertThat(task.getOrder()).isEqualTo(1);
             assertThat(task.getType()).isEqualTo(Type.MULTIPLE_CHOICE);
             assertThat(task.getOptions().size()).isEqualTo(4);
 
             assertThat(task.getOptions().get(0).getOption()).isEqualTo("Java");
             assertThat(task.getOptions().get(1).getOption()).isEqualTo("Python");
-            assertThat(task.getOptions().get(2).getOption()).isEqualTo("HTML");
-            assertThat(task.getOptions().get(3).getOption()).isEqualTo("CSS3");
+            assertThat(task.getOptions().get(2).getOption()).isEqualTo("Marcação HTML");
+            assertThat(task.getOptions().get(3).getOption()).isEqualTo("Estilo CSS");
 
             assertThat(task.getOptions().get(0).isCorrect()).isEqualTo(true);
             assertThat(task.getOptions().get(1).isCorrect()).isEqualTo(true);

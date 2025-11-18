@@ -2,6 +2,10 @@ package br.com.alura.AluraFake.course.domain.validator;
 
 import br.com.alura.AluraFake.course.domain.Course;
 import br.com.alura.AluraFake.course.domain.Status;
+import br.com.alura.AluraFake.course.domain.exception.CourseMustHaveBuildingStatusException;
+import br.com.alura.AluraFake.course.domain.exception.DuplicateStatementException;
+import br.com.alura.AluraFake.course.domain.exception.InvalidOrderException;
+import br.com.alura.AluraFake.course.domain.exception.MustHaveAtLeastOneTaskEachException;
 import br.com.alura.AluraFake.task.domain.Task;
 import br.com.alura.AluraFake.task.domain.Type;
 
@@ -27,7 +31,7 @@ public class CourseValidator {
 
         if (!course.getStatus().equals(Status.BUILDING)) {
 
-            throw new RuntimeException("Course is not in BUILDING status");
+            throw new CourseMustHaveBuildingStatusException();
         }
     }
 
@@ -39,7 +43,7 @@ public class CourseValidator {
                 .map(Task::getStatement)
                 .anyMatch(s -> normalize(s).equals(normalize(statement)))) {
 
-            throw new RuntimeException("Duplicate task statement in the course");
+            throw new DuplicateStatementException();
         }
     }
 
@@ -48,7 +52,7 @@ public class CourseValidator {
 
         if (order > maxOrder + 1) {
 
-            throw new RuntimeException("Task order must be sequential");
+            throw new InvalidOrderException();
         }
     }
 
@@ -57,7 +61,7 @@ public class CourseValidator {
                 .allMatch(type -> hasTaskOfType(course.getTasks(), type));
 
         if (!hasAllTypes) {
-            throw new RuntimeException("Course must have at least one task of each type: OPEN_TEXT, SINGLE_CHOICE, MULTIPLE_CHOICE");
+            throw new MustHaveAtLeastOneTaskEachException();
         }
     }
 
