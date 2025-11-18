@@ -5,6 +5,7 @@ import br.com.alura.AluraFake.user.application.port.out.ExistsUserByEmailPort;
 import br.com.alura.AluraFake.user.application.port.out.SaveUserPort;
 import br.com.alura.AluraFake.user.domain.Role;
 import br.com.alura.AluraFake.user.domain.User;
+import br.com.alura.AluraFake.user.domain.exception.EmailAlreadExistsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -104,8 +105,7 @@ class CreateUserServiceTest {
 
         // When & Then
         assertThatThrownBy(() -> createUserService.create(newUserDTO))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Email já cadastrado no sistema");
+                .isInstanceOf(EmailAlreadExistsException.class);
 
         verify(existsUserByEmailPort).existsByEmail("maria.santos@alura.com.br");
         verify(saveUserPort, never()).save(any(User.class));
