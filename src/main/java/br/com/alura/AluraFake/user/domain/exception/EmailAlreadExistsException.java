@@ -1,4 +1,4 @@
-package br.com.alura.AluraFake.course.domain.exception;
+package br.com.alura.AluraFake.user.domain.exception;
 
 import br.com.alura.AluraFake.shared.domain.exception.DomainException;
 

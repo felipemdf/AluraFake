@@ -1,9 +1,8 @@
-package br.com.alura.AluraFake.course.application.port.in;
+package br.com.alura.AluraFake.user.application.port.out;
 
-import br.com.alura.AluraFake.course.adapter.in.dto.NewCourseDTO;
-import br.com.alura.AluraFake.course.domain.Course;
+import br.com.alura.AluraFake.user.domain.User;
 
-public interface CreateCourseUseCase {
+public interface SaveUserPort {
 
-    Course create(NewCourseDTO newCourse);
+    User save(User user);
 }

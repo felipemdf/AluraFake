@@ -1,7 +1,10 @@
 package br.com.alura.AluraFake.user.adapter.in;
 
+import br.com.alura.AluraFake.user.domain.exception.EmailAlreadExistsException;
 import br.com.alura.AluraFake.user.adapter.in.dto.NewUserDTO;
-import br.com.alura.AluraFake.user.adapter.out.UserRepository;
+import br.com.alura.AluraFake.user.application.port.in.CreateUserUseCase;
+import br.com.alura.AluraFake.user.application.port.out.ExistsUserByEmailPort;
+import br.com.alura.AluraFake.user.application.port.out.FindAllUsersPort;
 import br.com.alura.AluraFake.user.domain.Role;
 import br.com.alura.AluraFake.user.domain.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -25,7 +28,13 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserRepository userRepository;
+    private CreateUserUseCase createUserUseCase;
+
+    @MockBean
+    private FindAllUsersPort findAllUsersPort;
+
+    @MockBean
+    private ExistsUserByEmailPort existsUserByEmailPort;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -67,14 +76,16 @@ class UserControllerTest {
         newUserDTO.setName("Caio Bugorin");
         newUserDTO.setRole(Role.STUDENT);
 
-        when(userRepository.existsByEmail(newUserDTO.getEmail())).thenReturn(true);
+        doThrow(new EmailAlreadExistsException()).when(createUserUseCase).create(any(NewUserDTO.class));
 
         mockMvc.perform(post("/user/new")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newUserDTO)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.field").value("email"))
-                .andExpect(jsonPath("$.message").value("Email já cadastrado no sistema"));
+                .andExpect(jsonPath("$.field").value("domain"))
+                .andExpect(jsonPath("$.message").value("Email already exists"));
+
+        verify(createUserUseCase).create(any(NewUserDTO.class));
     }
 
     @Test
@@ -84,19 +95,23 @@ class UserControllerTest {
         newUserDTO.setName("Caio Bugorin");
         newUserDTO.setRole(Role.STUDENT);
 
-        when(userRepository.existsByEmail(newUserDTO.getEmail())).thenReturn(false);
+        User user = new User("Caio Bugorin", "caio.bugorin@alura.com.br", Role.STUDENT);
+
+        when(createUserUseCase.create(any(NewUserDTO.class))).thenReturn(user);
 
         mockMvc.perform(post("/user/new")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newUserDTO)))
                 .andExpect(status().isCreated());
+
+        verify(createUserUseCase).create(any(NewUserDTO.class));
     }
 
     @Test
     void listAllUsers__should_list_all_users() throws Exception {
-        User user1 = new User("User 1", "user1@test.com",Role.STUDENT);
-        User user2 = new User("User 2", "user2@test.com",Role.STUDENT);
-        when(userRepository.findAll()).thenReturn(Arrays.asList(user1, user2));
+        User user1 = new User("User 1", "user1@test.com", Role.STUDENT);
+        User user2 = new User("User 2", "user2@test.com", Role.STUDENT);
+        when(findAllUsersPort.findAll()).thenReturn(Arrays.asList(user1, user2));
 
         mockMvc.perform(get("/user/all")
                         .contentType(MediaType.APPLICATION_JSON))

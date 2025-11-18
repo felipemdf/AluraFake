@@ -1,6 +1,6 @@
 package br.com.alura.AluraFake.user.application.port.out;
 
-public interface UserExistByEmail {
+public interface ExistsUserByEmailPort {
 
     Boolean existsByEmail(String email);
 }

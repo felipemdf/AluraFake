@@ -30,7 +30,7 @@ public class Course {
     private LocalDateTime publishedAt;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id")
+    @JoinColumn(name = "course_id", nullable = false)
     private List<Task> tasks = new ArrayList<>();
 
     private LocalDateTime createdAt = LocalDateTime.now();

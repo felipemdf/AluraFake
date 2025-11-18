@@ -21,15 +21,10 @@ public class NewTaskDTO {
     @Positive
     private final Integer order;
 
-    @NotNull
-    @Valid
-    private List<NewTaskOptionDTO> options;
-
-    public NewTaskDTO(Long courseId, String statement, Integer order, List<NewTaskOptionDTO> options) {
+    public NewTaskDTO(Long courseId, String statement, Integer order) {
         this.courseId = courseId;
         this.statement = statement;
         this.order = order;
-        this.options = options;
     }
 
     public Long getCourseId() {
@@ -47,7 +42,4 @@ public class NewTaskDTO {
         return order;
     }
 
-    public List<NewTaskOptionDTO> getOptions() {
-        return options;
-    }
 }

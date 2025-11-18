@@ -12,10 +12,10 @@ public class TaskOption {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 80, nullable = false)
+    @Column(name = "`option`", length = 80, nullable = false)
     private String option;
 
-    @Column(nullable = false)
+    @Column(name = "is_correct", nullable = false)
     private boolean isCorrect;
 
     private LocalDateTime createdAt = LocalDateTime.now();
